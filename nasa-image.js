@@ -11,6 +11,7 @@ export class NasaImage extends DDDSuper(I18NMixin(LitElement)){
     this.source = '';
     this.photographer = '';
     this.description = '';
+    this.owner = '';
   }
 
   static get properties() {
@@ -19,6 +20,7 @@ export class NasaImage extends DDDSuper(I18NMixin(LitElement)){
         title: { type: String },
         photographer: { type: String },
         description: { type: String },
+        owner: { type: String },
     };
   }
 
@@ -90,7 +92,8 @@ export class NasaImage extends DDDSuper(I18NMixin(LitElement)){
             <img src="${this.source}" alt="${this.description}"/>
           <div class="text">
             <div class="description">${this.title}</div>
-            <div class="credit">Photo Credit: ${this.photographer}</div>
+            <div class="credit">Owner: ${this.owner}</div>
+            <div class="credit">Photographer: ${this.photographer}</div>
           </div>
 
         </div>

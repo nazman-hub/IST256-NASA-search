@@ -20,7 +20,7 @@ export class NasaImage extends DDDSuper(I18NMixin(LitElement)){
         title: { type: String },
         photographer: { type: String },
         description: { type: String },
-        owner: { type: String },
+        owner: { type: String},
     };
   }
 
@@ -43,14 +43,15 @@ export class NasaImage extends DDDSuper(I18NMixin(LitElement)){
       padding: var(--ddd-spacing-5, 20px);
       border: var(--ddd-border-sm, black solid 3px);
       font-family: var(--ddd-font-primary, roboto);
-      font-weight: var(--ddd-font-weight-bold);
+      font-weight: var(--ddd-font-weight-bold, bold);
       font-size:16px;
+      background-color: white;      
       /* padding: 20px; */
     }
 
     a:focus{
       .image{
-        background-color: var(--ddd-theme-default-slateMaxLight,lightcyan);  
+        background-color: var(--ddd-theme-default-slateLight,lightcyan);  
       }
     }
 
@@ -92,8 +93,8 @@ export class NasaImage extends DDDSuper(I18NMixin(LitElement)){
             <img src="${this.source}" alt="${this.description}"/>
           <div class="text">
             <div class="description">${this.title}</div>
-            <div class="credit">Owner: ${this.owner}</div>
-            <div class="credit">Photographer: ${this.photographer}</div>
+            <div class="credit" ?hidden="${this.owner === 'N/A'}">Owner: ${this.owner}</div>
+            <div class="credit" ?hidden="${this.photographer === 'N/A'}">Photographer: ${this.photographer}</div>
           </div>
 
         </div>

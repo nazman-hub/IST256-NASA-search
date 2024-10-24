@@ -97,9 +97,11 @@ export class nasaSearch extends DDDSuper(I18NMixin(LitElement)) {
       }
       div.search{
         display: flex;
+        flex-wrap: wrap;
         gap: 5px;
-        width: 500px;
-        height: 50px;
+        min-width: 90vh;
+        max-width: 500px;
+        
         margin: auto;
 
       }
@@ -110,6 +112,7 @@ export class nasaSearch extends DDDSuper(I18NMixin(LitElement)) {
         margin: auto;   
       }
       input.search{
+        height: 50px;
         flex: 1 1 0;
         padding: 0 10px;
       }
@@ -134,8 +137,8 @@ export class nasaSearch extends DDDSuper(I18NMixin(LitElement)) {
           source="${item.links[0].href}"
           title="${item.data[0].title}"
           description="${item.data[0].description}"
-          photographer="${item.data[0].photographer ? item.data[0].photographer : 'N/A    '}"
-          owner="${item.data[0].secondary_creator ? item.data[0].secondary_creator : 'N/A    '}"
+          photographer="${item.data[0].photographer ? item.data[0].photographer : 'N/A'}"
+          owner="${item.data[0].secondary_creator ? item.data[0].secondary_creator : 'N/A'}"
         ></nasa-image>
         ` )}
       </div>

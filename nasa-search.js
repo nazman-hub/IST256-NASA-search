@@ -71,12 +71,10 @@ export class nasaSearch extends DDDSuper(I18NMixin(LitElement)) {
         height: 1px;
       }
 
-      h3 span {
+      /* h3 span {
         font-size: var(--nasa-search-label-font-size, var(--ddd-font-size-s));
-      }
-      nasa-image:hover{
-        background-color: lightgrey;
-      }
+      } */
+
 
       .results{
         display: flex;
@@ -91,7 +89,7 @@ export class nasaSearch extends DDDSuper(I18NMixin(LitElement)) {
     return html`
     <h2>${this.title}</h2>
     <div>
-        <input class="search input" placeholder="Search NASA images"  />
+        <input class="search input" placeholder="Search NASA images"  @keydown="${(e)=>e.key==='Enter'?this.inputChanged():undefined}"/>
         <button @click="${this.inputChanged}">Search</button>
     </div>
     <div>Search results for: ${this.value}</div>
@@ -101,9 +99,9 @@ export class nasaSearch extends DDDSuper(I18NMixin(LitElement)) {
         source="${item.links[0].href}"
         title="${item.data[0].title}"
         description="${item.data[0].description}"
-        photographer="${item.data[0].photographer}"
+        photographer="${item.data[0].photographer ? item.data[0].photographer : 'N/A    '}"
       ></nasa-image>
-      `)}
+      ` )}
       
     </div>
     `;
@@ -114,7 +112,8 @@ export class nasaSearch extends DDDSuper(I18NMixin(LitElement)) {
     this.updateResults(this.value);
   }
 
-  updated(changedProperties) {    
+  updated(changedProperties) { 
+       
     // @debugging purposes only
     if (changedProperties.has('items') && this.items.length > 0) {
       console.log(this.items);
@@ -131,6 +130,7 @@ export class nasaSearch extends DDDSuper(I18NMixin(LitElement)) {
         this.items = data.collection.items;
         this.loading = false;
         this.requestUpdate();
+        console.log(data.collection)
 
         
       }  

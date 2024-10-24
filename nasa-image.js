@@ -1,6 +1,9 @@
 import { LitElement, html, css } from "lit";
+import { DDDSuper } from "@haxtheweb/d-d-d/d-d-d.js";
+import { I18NMixin } from "@haxtheweb/i18n-manager/lib/I18NMixin.js";
 
-export class NasaImage extends LitElement {
+export class NasaImage extends DDDSuper(I18NMixin(LitElement)){
+  
 
   constructor() {
     super();
@@ -10,41 +13,56 @@ export class NasaImage extends LitElement {
     this.description = '';
   }
 
-  firstUpdated(){
-    if(this.photographer === ''){
-      this.photographer = 'N/A';
-    }
-  }
-
   static get properties() {
     return {
         source: { type: String },
         title: { type: String },
         photographer: { type: String },
-        description: { type: String }
+        description: { type: String },
     };
   }
 
   static get styles() {
-    return [css`
+    return [super.styles,css`
     
 
     :host {
       display:block;
-      max-width: 240px;
-      padding: --ddd-spacing-5;
-      
-
+      /* max-width: 240px;
+      padding: var(--ddd-spacing-5, 20px);
+      border: var(--ddd-border-sm, black solid 3px); */
     }
+
     .image{
       display: flex;
       flex-direction: column;
+      gap: var(--ddd-spacing-3, 20px);;
+      max-width: 240px;
+      padding: var(--ddd-spacing-5, 20px);
+      border: var(--ddd-border-sm, black solid 3px);
+      font-family: var(--ddd-font-primary, roboto);
+      font-weight: var(--ddd-font-weight-bold);
+      font-size:16px;
       /* padding: 20px; */
+    }
+
+    a:focus{
+      .image{
+        background-color: var(--ddd-theme-default-slateMaxLight,lightcyan);  
+      }
+    }
+
+    .image:hover{
+      background-color: var(--ddd-theme-default-creekLight,lightcyan);  
     }
     .image div {
     /* max-width: 240px; */
-    font-size: 16px;
-    font-weight: bold;
+    /* font: inherit; */
+    }
+    .credit{
+      font-style : italic;
+      font-size: 14px;
+      font-weight: 400;
     }
 
     .image img {
@@ -52,7 +70,10 @@ export class NasaImage extends LitElement {
     width: 240px;
     height: 240px;
     }
-
+    a div{
+      text-decoration: none;
+      color: black; 
+    }
     
 
 
@@ -64,14 +85,16 @@ export class NasaImage extends LitElement {
 
   render() {
     return html`
-    <div class="image">
-      <a href="${this.source}" target="_blank" rel="noopener noreferrer">
-        <img src="${this.source}" alt="${this.description}"/>
-      </a>
-      <div>${this.title}</div>
-      <div>Photo Credit: ${this.photographer}</div>
+    <a href="${this.source}" target="_blank" rel="noopener noreferrer">
+        <div class="image">
+            <img src="${this.source}" alt="${this.description}"/>
+          <div class="text">
+            <div class="description">${this.title}</div>
+            <div class="credit">Photo Credit: ${this.photographer}</div>
+          </div>
 
-    </div>
+        </div>
+    </a>
     `;
   }
   static get tag() {

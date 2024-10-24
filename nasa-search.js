@@ -5,6 +5,8 @@
 import { LitElement, html, css } from "lit";
 import { DDDSuper } from "@haxtheweb/d-d-d/d-d-d.js";
 import { I18NMixin } from "@haxtheweb/i18n-manager/lib/I18NMixin.js";
+import "./nasa-image.js";
+
 
 /**
  * `nasa-search`
@@ -20,12 +22,13 @@ export class nasaSearch extends DDDSuper(I18NMixin(LitElement)) {
 
   constructor() {
     super();
-    this.title = "";
-    this.t = this.t || {};
-    this.t = {
-      ...this.t,
-      title: "Title",
-    };
+    this.value = "aaa";
+    this.title = 'help';
+    this.loading = false;
+    this.items = [];
+
+
+
     this.registerLocalization({
       context: this,
       localesPath:
@@ -35,11 +38,20 @@ export class nasaSearch extends DDDSuper(I18NMixin(LitElement)) {
     });
   }
 
+  firstUpdated(){
+    this.updateResults(this.value);
+
+  }
+
   // Lit reactive properties
   static get properties() {
     return {
       ...super.properties,
       title: { type: String },
+      loading: { type: Boolean, reflect: true },
+      items: { type: Array},
+      value: { type: String },
+
     };
   }
 
@@ -53,12 +65,23 @@ export class nasaSearch extends DDDSuper(I18NMixin(LitElement)) {
         background-color: var(--ddd-theme-accent);
         font-family: var(--ddd-font-navigation);
       }
-      .wrapper {
-        margin: var(--ddd-spacing-2);
-        padding: var(--ddd-spacing-4);
+      :host([loading]) .results {
+        opacity: 0.1;
+        visibility: hidden;
+        height: 1px;
       }
+
       h3 span {
         font-size: var(--nasa-search-label-font-size, var(--ddd-font-size-s));
+      }
+      nasa-image:hover{
+        background-color: lightgrey;
+      }
+
+      .results{
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
       }
     `];
   }
@@ -66,10 +89,54 @@ export class nasaSearch extends DDDSuper(I18NMixin(LitElement)) {
   // Lit render the HTML
   render() {
     return html`
-<div class="wrapper">
-  <h3><span>${this.t.title}:</span> ${this.title}</h3>
-  <slot></slot>
-</div>`;
+    <h2>${this.title}</h2>
+    <div>
+        <input class="search input" placeholder="Search NASA images"  />
+        <button @click="${this.inputChanged}">Search</button>
+    </div>
+    <div>Search results for: ${this.value}</div>
+    <div class="results">
+      ${this.items.map((item) => html`
+      <nasa-image
+        source="${item.links[0].href}"
+        title="${item.data[0].title}"
+        description="${item.data[0].description}"
+        photographer="${item.data[0].photographer}"
+      ></nasa-image>
+      `)}
+      
+    </div>
+    `;
+  }
+  inputChanged(e) {
+    this.value = this.shadowRoot.querySelector('.search.input').value;
+    // console.log(this.value);
+    this.updateResults(this.value);
+  }
+
+  updated(changedProperties) {    
+    // @debugging purposes only
+    if (changedProperties.has('items') && this.items.length > 0) {
+      console.log(this.items);
+    }
+    
+  }
+  updateResults(value) {
+    this.loading = true;
+    fetch(`https://images-api.nasa.gov/search?media_type=image&q=${value}`)
+    .then(d => d.ok ? d.json(): {})
+    .then(data => {
+      if (data.collection) {
+        this.items = [];
+        this.items = data.collection.items;
+        this.loading = false;
+        this.requestUpdate();
+
+        
+      }  
+    });
+      
+
   }
 
   /**

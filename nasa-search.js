@@ -99,8 +99,8 @@ export class nasaSearch extends DDDSuper(I18NMixin(LitElement)) {
         display: flex;
         flex-wrap: wrap;
         gap: 5px;
-        min-width: 90vh;
-        max-width: 500px;
+        /* min-width: 90vh; */
+        /* max-width: 100vh; */
         
         margin: auto;
 

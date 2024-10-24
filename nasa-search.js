@@ -40,6 +40,14 @@ export class nasaSearch extends DDDSuper(I18NMixin(LitElement)) {
 
   firstUpdated(){
     this.updateResults(this.value);
+    //focus search bar when press'/' (copied from google)
+    document.addEventListener("keyup", e => {
+      console.log(e);
+      if (e.key !== "/" || e.ctrlKey || e.metaKey) return;
+      if (/^(?:input|textarea|select|button)$/i.test(e.target.tagName)) return;
+      e.preventDefault();
+      this.shadowRoot.querySelector('input.search').focus();
+    });
 
   }
 
@@ -68,9 +76,8 @@ export class nasaSearch extends DDDSuper(I18NMixin(LitElement)) {
         margin: 0;
       }
       * {
-          margin: 0;          /* Remove default margin */
-          padding: 0;         /* Remove default padding */
-          /*-sizing: border-box; /* Include padding and border in element's total width and height */
+          margin: 0;          
+          padding: 0;      
       }
       :host([loading]) .results {
         opacity: 0.1;
@@ -86,6 +93,7 @@ export class nasaSearch extends DDDSuper(I18NMixin(LitElement)) {
       .results{
         display: flex;
         flex-wrap: wrap;
+
         gap: 16px;
       }
       div{
@@ -99,14 +107,15 @@ export class nasaSearch extends DDDSuper(I18NMixin(LitElement)) {
         display: flex;
         flex-wrap: wrap;
         gap: 5px;
-        /* min-width: 90vh; */
-        /* max-width: 100vh; */
-        
+        width: 500px;
+        max-width: 90vw;
         margin: auto;
+        justify-content: center;
 
       }
       button.search{
         height: 50px;
+        box-sizing: content-box;
         padding: 0 20px;
         text-align: center;
         margin: auto;   
@@ -127,17 +136,22 @@ export class nasaSearch extends DDDSuper(I18NMixin(LitElement)) {
     <div class="container">
       <h2>${this.title}</h2>
       <div class="search">
-        <input class="search" placeholder="Search NASA images... (hit enter to search)"  @keydown="${(e)=>e.key==='Enter'?this.inputChanged():undefined}"/>
-        <button class="search" @click="${this.inputChanged}">Search</button>
+       
+        <input class="search" placeholder="Press '/' to begin searching, hit enter to search"  
+        @keydown="${(e)=>e.key==='Enter'?this.inputChanged():undefined}"/>  <!--pressing enter calls this.inputChanged-->
+
+        <button class="search" @click="${this.inputChanged}">Search</button> <!--pressing search button calls this.inputChanged-->
       </div>
       <div>Search results for: ${this.value}</div>
+      <!-- copied from example -->
       <div class="results">
+        <!-- "{item.data[0].photographer ? item.data[0].photographer : 'N/A'}"returns photographer if exists, and 'N/A' if not  -->
         ${this.items.map((item) => html`
         <nasa-image
           source="${item.links[0].href}"
           title="${item.data[0].title}"
           description="${item.data[0].description}"
-          photographer="${item.data[0].photographer ? item.data[0].photographer : 'N/A'}"
+          photographer="${item.data[0].photographer ? item.data[0].photographer : 'N/A'}" 
           owner="${item.data[0].secondary_creator ? item.data[0].secondary_creator : 'N/A'}"
         ></nasa-image>
         ` )}
@@ -146,9 +160,8 @@ export class nasaSearch extends DDDSuper(I18NMixin(LitElement)) {
     `;
   }
   inputChanged(e) {
-    
-    this.value = this.shadowRoot.querySelector('input.search').value;
-    
+    //copied from example
+    this.value = this.shadowRoot.querySelector('input.search').value; // set this.value to string in search bar
     // console.log(this.value);
     this.updateResults(this.value);
   }
@@ -162,6 +175,9 @@ export class nasaSearch extends DDDSuper(I18NMixin(LitElement)) {
     
   }
   updateResults(value) {
+
+    //if this.value exists, fetch and update this.items
+    //else, this. = []
     if (this.value) {
       this.loading = true;
       fetch(`https://images-api.nasa.gov/search?media_type=image&q=${value}`)

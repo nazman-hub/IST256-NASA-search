@@ -77,10 +77,6 @@ export class NasaImage extends DDDSuper(I18NMixin(LitElement)){
       text-decoration: none;
       color: black; 
     }
-    
-
-
-
     `];
   }
 
@@ -93,6 +89,7 @@ export class NasaImage extends DDDSuper(I18NMixin(LitElement)){
             <img src="${this.source}" alt="${this.description}"/>
           <div class="text">
             <div class="description">${this.title}</div>
+            <!-- hide owner div if owner === 'N/A' -->
             <div class="credit" ?hidden="${this.owner === 'N/A'}">Owner: ${this.owner}</div>
             <div class="credit" ?hidden="${this.photographer === 'N/A'}">Photographer: ${this.photographer}</div>
           </div>

@@ -48,7 +48,17 @@ export class nasaSearch extends DDDSuper(I18NMixin(LitElement)) {
       e.preventDefault();
       this.shadowRoot.querySelector('input.search').focus();
     });
+  }
 
+  updated(changedProperties) { 
+
+    console.log(changedProperties)
+       
+    // @debugging purposes only
+    if (changedProperties.has('items') && this.items.length > 0) {
+      console.log(this.items);
+    }
+    
   }
 
   // Lit reactive properties
@@ -166,14 +176,7 @@ export class nasaSearch extends DDDSuper(I18NMixin(LitElement)) {
     this.updateResults(this.value);
   }
 
-  updated(changedProperties) { 
-       
-    // @debugging purposes only
-    if (changedProperties.has('items') && this.items.length > 0) {
-      console.log(this.items);
-    }
-    
-  }
+  
   updateResults(value) {
 
     //if this.value exists, fetch and update this.items

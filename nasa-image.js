@@ -45,18 +45,16 @@ export class NasaImage extends DDDSuper(I18NMixin(LitElement)){
       font-family: var(--ddd-font-primary, roboto);
       font-weight: var(--ddd-font-weight-bold, bold);
       font-size:16px;
-      background-color: white;      
+      color: var(--ddd-theme-primary);
+      background-color: var(--ddd-theme-accent);
       /* padding: 20px; */
     }
 
-    a:focus{
-      .image{
-        background-color: var(--ddd-theme-default-slateLight,lightcyan);  
-      }
-    }
 
+    .image:focus-within,
     .image:hover{
       background-color: var(--ddd-theme-default-creekLight,lightcyan);  
+      color: black;
     }
     .image div {
     /* max-width: 240px; */
@@ -75,7 +73,7 @@ export class NasaImage extends DDDSuper(I18NMixin(LitElement)){
     }
     a div{
       text-decoration: none;
-      color: black; 
+      color:  var(--ddd-theme-primary); 
     }
     `];
   }
@@ -84,18 +82,19 @@ export class NasaImage extends DDDSuper(I18NMixin(LitElement)){
 
   render() {
     return html`
-    <a href="${this.source}" target="_blank" rel="noopener noreferrer">
-        <div class="image">
-            <img src="${this.source}" alt="${this.description}"/>
-          <div class="text">
-            <div class="description">${this.title}</div>
-            <!-- hide owner div if owner === 'N/A' -->
-            <div class="credit" ?hidden="${this.owner === 'N/A'}">Owner: ${this.owner}</div>
-            <div class="credit" ?hidden="${this.photographer === 'N/A'}">Photographer: ${this.photographer}</div>
-          </div>
+    <div class="image">
 
-        </div>
-    </a>
+      <a href="${this.source}" target="_blank" rel="noopener noreferrer">
+        <img src="${this.source}" alt="${this.description}"/>
+      </a>
+      <div class="text">
+        <div class="description">${this.title}</div>
+        <!-- hide owner div if owner/photographer === 'N/A' -->
+        <div class="credit" ?hidden="${this.owner === 'N/A'}">Owner: ${this.owner}</div>
+        <div class="credit" ?hidden="${this.photographer === 'N/A'}">Photographer: ${this.photographer}</div>
+      </div>        
+    </div>
+
     `;
   }
   static get tag() {
